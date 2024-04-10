@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PyFlow</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Moirai+One&display=swap">
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to bottom right, #ff7e5f, #feb47b, #ffcb6b);
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .container {
+    width: 90%;
+    max-width: 800px;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    text-align: center;
+  }
+
+  h1 {
+    font-size: 48px;
+    margin-bottom: 20px;
+    font-family: 'Moirai One', sans-serif;
+  }
+
+  h1 span {
+    font-weight: normal;
+  }
+
+  textarea {
+    width: 100%;
+    min-height: 200px;
+    padding: 10px;
+    box-sizing: border-box;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    resize: none;
+  }
+
+  button {
+    padding: 10px 20px;
+    background-color: #4abdac;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+  }
+
+  button:hover {
+    background-color: #388d9d;
+  }
+
+  #preview {
+    width: 100%;
+    min-height: 400px;
+    border: none;
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+  }
+
+  #randomize-button {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background-color: #4abdac;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    transition: background-color 0.3s ease;
+  }
+
+  #randomize-button:hover {
+    background-color: #388d9d;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1><span>Py</span>Flow</h1>
+
+  <textarea id="code2flow" placeholder="Paste code here..."></textarea>
+
+  <button onclick="getCodeAndGenerate()">Generate✨</button>
+
+  <h3>Preview:</h3>
+  <iframe id="preview" srcdoc="" frameborder="0"></iframe>
+</div>
+
+<button id="randomize-button" onclick="randomizeBackground()">🎲</button>
+
+<script>
+  function getCodeAndGenerate() {
+    var code = document.getElementById("code2flow").value;
+    fetch('/convert', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ code: code })
+    })
+    .then(response => response.text())
+    .then(htmlCode => {
+      var previewFrame = document.getElementById("preview");
+      previewFrame.srcdoc = htmlCode;
+    })
+    .catch(error => console.error('Error:', error));
+  }
+
+  function randomizeBackground() {
+    var colors = ['#ff7e5f', '#feb47b', '#ffcb6b', '#6fb1fc', '#8e54e9', '#4bcffa', '#43e97b'];
+    var randomIndex1 = Math.floor(Math.random() * colors.length);
+    var randomIndex2 = Math.floor(Math.random() * colors.length);
+    while (randomIndex2 === randomIndex1) {
+      randomIndex2 = Math.floor(Math.random() * colors.length);
+    }
+    var color1 = colors[randomIndex1];
+    var color2 = colors[randomIndex2];
+    document.body.style.background = 'linear-gradient(to bottom right, ' + color1 + ', ' + color2 + ')';
+  }
+</script>
+
+</body>
+</html>
