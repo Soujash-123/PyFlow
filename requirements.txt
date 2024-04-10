@@ -1,0 +1,4 @@
+Flask
+flask-cors
+pyflowchart
+gunicorn
